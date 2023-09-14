@@ -1,16 +1,7 @@
 import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
 from datetime import time
-
-
-def clean_up(df):
-    df.drop(columns=['CONTRIBUTING FACTOR VEHICLE 3', 'CONTRIBUTING FACTOR VEHICLE 4', 'CONTRIBUTING FACTOR VEHICLE 5', 'VEHICLE TYPE CODE 3', 'VEHICLE TYPE CODE 4', 'VEHICLE TYPE CODE 5'], inplace=True)
-    df.dropna(subset=['BOROUGH'], inplace=True)
-    df.dropna(subset=['LATITUDE', 'LONGITUDE'], inplace=True)
-    df = df[df['LATITUDE']!=0]
-    df = df[df['LONGITUDE']!=0]
-
+from cleanupFile import cleanUp
 
 def custom_time_func(row,time1,time2,time3,time4):
     if row['CRASH TIME']>=str(time4) or row['CRASH TIME']<str(time1):
@@ -33,31 +24,33 @@ def plot_pie_chart(df,title):
     plt.title(title)
     plt.show()
 
-time1 = time(6,00,00)
-time2 = time(12,00,00)
-time3 = time(16,30,00)
-time4 = time(22,00,00)
 
-df = pd.read_csv("Dataset5.csv")
+if __name__ == "__main__":
+    
+    time1 = time(6,00,00)
+    time2 = time(12,00,00)
+    time3 = time(16,30,00)
+    time4 = time(22,00,00)
 
-df1 = df
-df1['CRASH_DAYTIME'] = df1.apply(custom_time_func,args=(time1,time2,time3,time4),axis=1)
-df2 = df1.groupby('CRASH_DAYTIME')
-df3 = df2.size()
-plot_pie_chart(df3,"Total Accidents in New York City")
+    df = pd.read_csv("Dataset5.csv")
+    cleanUp(df)
+    df1 = df
+    df1['CRASH_DAYTIME'] = df1.apply(custom_time_func,args=(time1,time2,time3,time4),axis=1)
+    df2 = df1.groupby('CRASH_DAYTIME')
+    df3 = df2.size()
+    plot_pie_chart(df3,"Total Accidents in New York City")
 
-df5 = df1.groupby(by='CRASH_DAYTIME')['NUMBER OF PERSONS KILLED'].sum()
-df5 = pd.Series(df5)
-plot_pie_chart(df5,"Total deaths in accidents in New York City ")
+    df5 = df1.groupby(by='CRASH_DAYTIME')['NUMBER OF PERSONS KILLED'].sum()
+    df5 = pd.Series(df5)
+    plot_pie_chart(df5,"Total deaths in accidents in New York City ")
 
-df5 = df1.groupby(by='CRASH_DAYTIME')['NUMBER OF PERSONS INJURED'].sum()
-df5 = pd.Series(df5)
-plot_pie_chart(df5,"Total injuries in accidents in New York City")
+    df5 = df1.groupby(by='CRASH_DAYTIME')['NUMBER OF PERSONS INJURED'].sum()
+    df5 = pd.Series(df5)
+    plot_pie_chart(df5,"Total injuries in accidents in New York City")
 
+    groups = df.groupby(by=['BOROUGH'])
 
-groups = df.groupby(by=['BOROUGH'])
-
-for name, group in groups:
+    for name, group in groups:
         print(name)
         group['CRASH_DAYTIME'] = group.apply(custom_time_func,args=(time1,time2,time3,time4),axis=1)
         df3 = group.groupby('CRASH_DAYTIME')
