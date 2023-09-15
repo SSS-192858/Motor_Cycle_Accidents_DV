@@ -10,18 +10,13 @@ if __name__ == "__main__":
     fig.update_layout(mapbox_style = "open-street-map")
     fig.show()
 
-    df2 = df.groupby('BOROUGH')
-    print("+-----------------------+")
-    print(df2.size())
-    print("+-----------------------+")
-
     groupingDictionary = groupingDictionary_common
         
     df1 = df[df['CONTRIBUTING FACTOR VEHICLE 1'] != "Unspecified"]
 
     df1['MAJOR ACCIDENT TYPE 1'] = df1.apply(custom_acc_type,args=1,axis=1)
     
-    for name, group in df2:
+    for name, group in df1:
         df_temp = df1[df1['BOROUGH'] == name]
         df_temp = df_temp.sort_values(by=['MAJOR ACCIDENT TYPE 1'])
         print(name)
@@ -34,7 +29,7 @@ if __name__ == "__main__":
 
     df1['MAJOR ACCIDENT TYPE 2'] = df1.apply(custom_acc_type, args=2,axis=1)
 
-    for name, group in df2:
+    for name, group in df1:
         df_temp = df1[df1['BOROUGH'] == name]
         df_temp = df_temp.sort_values(by=['MAJOR ACCIDENT TYPE 2'])
         print(name)
