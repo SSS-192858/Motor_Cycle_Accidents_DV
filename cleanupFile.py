@@ -25,5 +25,3 @@ def custom_acc_type(row, column):
         else:
             if row['CONTRIBUTING FACTOR VEHICLE 2'] in groupingDictionary_common[j]:
                 return j
-
-
