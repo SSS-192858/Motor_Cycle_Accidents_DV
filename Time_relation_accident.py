@@ -25,7 +25,6 @@ def custom_time_func(row,time1,time2,time3,time4):
         return "NIGHT"
 
 df['CRASH DAYTIME'] = df.apply(custom_time_func,args=(time1,time2,time3,time4),axis=1)
-print(df['CRASH DAYTIME'])
 df['MAJOR ACCIDENT TYPE 1'] = df.apply(custom_acc_type, column=1 , axis=1)
 df4 = df.groupby(by='MAJOR ACCIDENT TYPE 1')
 

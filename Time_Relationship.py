@@ -75,7 +75,7 @@ for name, group in groups:
         df5 = group.groupby(by='CRASH_DAYTIME')['NUMBER OF PERSONS KILLED'].sum()
         df5 = pd.Series(df5)
         plt.subplot(2,3,val2)
-        plot_pie_chart(df5,"Total Fatalities in accidents in "+name)
+        plot_pie_chart(df5,"Total deaths in accidents in "+name)
         val2+=1
 plt.show()
 for name, group in groups:

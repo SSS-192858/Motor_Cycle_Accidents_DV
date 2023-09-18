@@ -5,7 +5,7 @@ from cleanupFile import cleanUp
     
 def count_func(df1: pd.DataFrame,param,dict):
     for i,row in df1.iterrows():
-        dict[row['BOROUGH']][0]+=row['NUMBER OF PEDESTRAINS '+param]
+        dict[row['BOROUGH']][0]+=row['NUMBER OF PEDESTRIANS '+param]
         dict[row['BOROUGH']][1]+=row['NUMBER OF CYCLIST '+param]
         dict[row['BOROUGH']][2]+=row['NUMBER OF MOTORIST '+param]
     

@@ -1,9 +1,12 @@
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
-from cleanupFile import cleanUp, groupingDictionary_common
-plt.rcParams['figure.figsize'] = (30,15)
+from cleanupFile import groupingDictionary_common, cleanUp
 
-def make_series(df: pd.DataFrame,groupingDictionary:dict):
+
+def make_series(df: pd.DataFrame):
+
+    groupingDictionary = groupingDictionary_common
 
     df1 = df[df['CONTRIBUTING FACTOR VEHICLE 1'] != "Unspecified"]
     df1 = df1.sort_values(by=['CONTRIBUTING FACTOR VEHICLE 1'])
@@ -34,33 +37,43 @@ def make_series(df: pd.DataFrame,groupingDictionary:dict):
 
     return pd.Series(dc)
 
+
+
 def plot_series(s_total: pd.Series, name="New York City"):
 
     bars = s_total.index
     x_pos = range(len(s_total))
-    plt.bar(x_pos, s_total.values, width=0.4)
-    plt.xlabel("Cause of accident", fontsize=15)
-    plt.ylabel("Accidents", fontsize=15)
-    plt.title(f"Accidents by type in {name}", fontsize=15)
-    plt.xticks(x_pos, bars, fontsize=15)
-    plt.yticks(fontsize=15)
+    plt.bar(x_pos, s_total.values, width=0.8)
+    plt.xlabel("Cause of accident", fontsize=10)
+    plt.ylabel("Accidents", fontsize=10)
+    plt.title(f"Accidents by type in {name}", fontsize=10)
+    plt.xticks(x_pos, bars, fontsize=10, rotation=80)
+    plt.yticks(fontsize=10)
     for i in range(len(s_total)):
-        plt.text(i, s_total.astype('int32')[i], s_total.astype('int32')[i], ha='center', bbox = dict(facecolor = 'white', alpha =.8), fontsize=15)
-    plt.show()
+        plt.text(i, s_total.astype('int32')[i], s_total.astype('int32')[i], ha='center', bbox = dict(facecolor = 'white', alpha =.8), fontsize=10)
 
 
-if __name__ == "__main__":
+df = pd.read_csv("Dataset5.csv")
+cleanUp(df)
 
-    df = pd.read_csv("Dataset5.csv")
-    cleanUp(df)
+s = make_series(df)
+plot_series(s)
+plt.show()
 
-    groupingDictionary = groupingDictionary_common
-
-    s = make_series(df, groupingDictionary)
-    plot_series(s)
-
-    groups = df.groupby(by=['BOROUGH'])
-    for name, group in groups:
-        s = make_series(group, groupingDictionary)
-        print(name)
-        plot_series(s, name)
+r=-6.0
+groups = df.groupby(by=['BOROUGH'])
+for name, group in groups:
+    s = make_series(group)
+    print(name)
+    bars = s.index
+    x_pos = np.arange(len(s))
+    x_pos*=20
+    plt.bar(x_pos+r, s.values, width=3, label=name)
+    plt.xlabel("Cause of accident", fontsize=10)
+    plt.ylabel("Accidents", fontsize=10)
+    plt.xticks(x_pos, bars, fontsize=10, rotation=80)
+    plt.yticks(fontsize=10)
+    r+=3
+plt.title("Accidents by type in different boroughs", fontsize=10)
+plt.legend()
+plt.show()        
